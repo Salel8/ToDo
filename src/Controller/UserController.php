@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,13 +8,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 //use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\ORM\EntityManagerInterface;
-use AppBundle\Entity\User;
-use AppBundle\Form\UserType;
+use App\Entity\User;
+use App\Form\UserType;
 use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
+    #[IsGranted('ROLE_ADMIN', message: 'You are not allowed to access the admin dashboard.')]
     #[Route('/users', name: 'user_list')]
     public function listAction(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -28,7 +31,7 @@ class UserController extends AbstractController
     }
 
 
-    
+    #[IsGranted('ROLE_ADMIN', message: 'You are not allowed to access the admin dashboard.')]
     #[Route('/users/create', name: 'user_create')]
     public function createAction(Request $request, EntityManagerInterface $entityManager,UserPasswordHasherInterface $passwordHasher, NotifierInterface $notifier)
     {
@@ -49,11 +52,13 @@ class UserController extends AbstractController
                 $plaintextPassword
             );
             $user->setPassword($hashedPassword);
+            $user->setRoles([$form->get('role')]);
+            //$user->setRoles($form->get('role'));
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $notifier->send(new Notification('Vous avez modifié votre article.', ['browser']));
+            $notifier->send(new Notification('L\'utilisateur a bien été ajouté.', ['browser']));
 
             return $this->redirectToRoute('user_list');
         }
@@ -81,7 +86,7 @@ class UserController extends AbstractController
     }
 
 
-
+    #[IsGranted('ROLE_ADMIN', message: 'You are not allowed to access the admin dashboard.')]
     #[Route('/users/{id}/edit', name: 'user_edit')]
     public function editAction(int $id, Request $request, EntityManagerInterface $entityManager,UserPasswordHasherInterface $passwordHasher, NotifierInterface $notifier)
     {
@@ -95,6 +100,9 @@ class UserController extends AbstractController
         //$post_db = $entityManager->getRepository(Post::class)->findOneBy(['id' => $id]);
 
         $user = new User();
+
+        $user->setUsername($user_db->getUsername());
+        $user->setEmail($user_db->getEmail());
 
         $form = $this->createForm(UserType::class, $user);
 
@@ -110,6 +118,10 @@ class UserController extends AbstractController
                 $plaintextPassword
             );
             $user_db->setPassword($hashedPassword);
+            $user_db->setUsername($user->getUsername());
+            $user_db->setEmail($user->getEmail());
+            $user_db->setRoles([$form->get('role')->getData()]);
+
 
             $entityManager->persist($user_db);
             $entityManager->flush();
@@ -128,7 +140,7 @@ class UserController extends AbstractController
 
         return $this->render('user/edit.html.twig', [
             'form' => $form->createView(), 
-            'user' => $user,
+            'user' => $user_db,
         ]);
     }
 }
