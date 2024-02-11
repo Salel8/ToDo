@@ -50,6 +50,47 @@ Une fois que le fichier .env.local est configuré, il faut créer la base de don
 php bin/console doctrine:database:create
 ```
 
+Si par la suite vous voulez ajouter des modifications au niveau des entités du projet pour modifier les tables de la base de donnée, il faudra alors utiliser les commandes suivantes :
+
+```bash
+php bin/console make:migration
+```
+
+```bash
+php bin/console doctrine:migrations:migrate
+```
+
+Enfin, lors des tests il est préférable de ne pas modifier la base de données. Nous pouvons alors créer une base de données qui ne servira qu'en environnement de test. Pour cela, il faut ajouter ce qui suit dans le fichier .env.test (comme nous l'avons fait précemment) :
+
+```php
+DRIVER="pdo_mysql"
+DBNAME="todo"
+PORT="8889"
+USER="user"
+PASSWORD="password"
+HOST="127.0.0.1"
+```
+
+Puis, dans le fichier 'config/packages/doctrine.yaml', il faut ajouter :
+
+```php
+when@test:
+    doctrine:
+        dbal:
+            # "TEST_TOKEN" is typically set by ParaTest
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+```
+
+Enfin, il faut créer la base de données et ajouter les tables avec les commandes suivantes :
+
+```php
+symfony console doctrine:database:create --env=test
+```
+
+```php
+symfony console doctrine:migrations:migrate -n --env=test
+```
+
 Cette configuration étant établie, vous pouvez dorénavant profiter pleinement de l'ensemble du projet.
 
 ## Démarrage
@@ -67,6 +108,12 @@ Pour cela, il vous faut utiliser la commande terminale (toujours à la racine de
 
 ```bash
 php bin/console doctrine:fixtures:load
+```
+
+Nous devons aussi charger les fixtures pour l'environnement de test dans la base de données de test avec la commande suivante :
+
+```bash
+symfony console doctrine:fixtures:load --env=test
 ```
 
 Une fois cette commande réalisée, vous devez lancer le serveur de symfony avec la commande :

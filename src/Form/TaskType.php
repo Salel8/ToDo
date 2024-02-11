@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
@@ -18,7 +19,7 @@ class TaskType extends AbstractType
         $builder
             ->add('title')
             ->add('content', TextareaType::class)
-            ->add('author')
+            ->add('author', HiddenType::class)
         ;
     }
     

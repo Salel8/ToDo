@@ -25,7 +25,6 @@ class UserController extends AbstractController
         $users = $repository->findAll();
 
         return $this->render('user/list.html.twig', [
-            //'users' => $this->getDoctrine()->getRepository('AppBundle:User')->findAll()
             'users' => $users,
         ]);
     }
@@ -53,7 +52,6 @@ class UserController extends AbstractController
             );
             $user->setPassword($hashedPassword);
             $user->setRoles([$form->get('role')]);
-            //$user->setRoles($form->get('role'));
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -62,23 +60,6 @@ class UserController extends AbstractController
 
             return $this->redirectToRoute('user_list');
         }
-        //$user = new User();
-        //$form = $this->createForm(UserType::class, $user);
-
-        //$form->handleRequest($request);
-
-        /*if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
-
-            $em->persist($user);
-            $em->flush();
-
-            $this->addFlash('success', "L'utilisateur a bien été ajouté.");
-
-            return $this->redirectToRoute('user_list');
-        }*/
 
         return $this->render('user/create.html.twig', [
             'form' => $form->createView(),
@@ -97,7 +78,6 @@ class UserController extends AbstractController
                 'No product found for id '.$id
             );
         }
-        //$post_db = $entityManager->getRepository(Post::class)->findOneBy(['id' => $id]);
 
         $user = new User();
 
@@ -127,13 +107,6 @@ class UserController extends AbstractController
             $entityManager->flush();
 
             $notifier->send(new Notification('L\'utilisateur a bien été modifié.', ['browser']));
-
-            //$password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
-            //$user->setPassword($password);
-
-            //$this->getDoctrine()->getManager()->flush();
-
-            //$this->addFlash('success', "L'utilisateur a bien été modifié");
 
             return $this->redirectToRoute('user_list');
         }

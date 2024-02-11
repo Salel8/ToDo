@@ -16,12 +16,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    //#[Assert\Length(min: 3, max: 25, minMessage: "Le nom doit faire au moins {{ limit }} caractères", maxMessage: "La description ne peut pas faire plus de {{ limit }} caractères")]
     #[Assert\NotBlank(message: "Vous devez saisir un nom d'utilisateur.")]
     #[ORM\Column(length: 25, unique: true)]
     private ?string $username = null;
 
-    #[Assert\NotBlank(message: "Vous devez saisir un rôle.")]
     #[ORM\Column]
     private array $roles = [];
 
@@ -80,19 +78,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         //return $this->role;
     }
 
-    public function getRole(): string
-    {
-        //$roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        //$roles[] = 'ROLE_USER';
-
-        //return array_unique($roles);
-        return $this->role;
-    }
-
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): static
+    {
+        $this->role = $role;
 
         return $this;
     }

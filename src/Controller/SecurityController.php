@@ -39,9 +39,4 @@ class SecurityController extends AbstractController
         // This code is never executed.
     }
 
-    //pattern: ^/modify
-    //use Symfony\Component\Security\Http\Attribute\IsGranted;
-    // #[IsGranted('view', 'post')]
-
-
 }

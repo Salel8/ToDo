@@ -21,8 +21,6 @@ class TaskController extends AbstractController
     #[Route('/tasks', name: 'task_list')]
     public function listAction(EntityManagerInterface $entityManager, Request $request): Response
     {
-        /*$repository = $entityManager->getRepository(Task::class);
-        $tasks = $repository->findAll();*/
         $tasks = $entityManager->getRepository(Task::class)->findAll();
 
         return $this->render('task/list.html.twig', [
@@ -96,9 +94,6 @@ class TaskController extends AbstractController
 
             $notifier->send(new Notification('La tâche a bien été modifiée.', ['browser']));
 
-
-
-
             return $this->redirectToRoute('task_list');
         }
 
@@ -129,8 +124,6 @@ class TaskController extends AbstractController
 
         $notifier->send(new Notification('La tâche a bien été marquée comme faite.', ['browser']));
 
-        //$this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
-
         return $this->redirectToRoute('task_list');
     }
 
@@ -157,24 +150,7 @@ class TaskController extends AbstractController
                 $notifier->send(new Notification('La tâche a bien été supprimée.', ['browser']));
             }
 
-            /*if($task_db->getAuthor()=="anonyme" && $user-getRole()=="ROLE_ADMIN"){
-                $entityManager->remove($task_db);
-                $entityManager->flush();
-
-                $notifier->send(new Notification('La tâche a bien été supprimée.', ['browser']));
-            }*/
-
         }
-
-        
-
-        
-
-        /*$em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
-
-        $this->addFlash('success', 'La tâche a bien été supprimée.');*/
 
         return $this->redirectToRoute('task_list');
     }

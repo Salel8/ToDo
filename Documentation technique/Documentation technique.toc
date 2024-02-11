@@ -1,0 +1,7 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1 -}Résumé du projet}{3}{section.1}%
+\contentsline {section}{\numberline {2 -}Création de l'Authentification}{3}{section.2}%
+\contentsline {subsection}{\numberline {2 -.1}Entité}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2 -.2}Controller}{3}{subsection.2.2}%
+\contentsline {section}{\numberline {3 -}Pour modifier le projet}{4}{section.3}%
+\contentsline {section}{\numberline {4 -}Se connecter}{5}{section.4}%

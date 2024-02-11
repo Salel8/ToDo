@@ -93,11 +93,11 @@ L'authentification permet à un utilisateur de s'authentifier, c'est à dire d'�
 
 Une entité est un fichier qui permet de relier le site web à une base de données (ici MySQL). Ce fichier est composé de propriétés et de méthodes qui déterminent les données qui seront dans la table; un fichier par table.
 
-Nous commençons par créer l'entité User qui nous permettra de définir la table User et les données qui iront dedans. Pour cela, nous utilisons la commande 'php bin/console make:user'. Une série de question nous est posée et nous devons y répondre. Le nom de la classe, ici User; si nous souhaitons stocker les données dans la base de données, ici oui; d'entrer le nom de la propriété qui serait unique, ici l'email; et si notre application a besoin de hasher le mot de passe, ici la réponse est oui.
+Nous commençons par créer l'entité User qui nous permettra de définir la table User et les données qui iront dedans. Pour cela, nous utilisons la commande 'php bin/console make:user'. Une série de question nous est posée et nous devons y répondre. Le nom de la classe, ici User; si nous souhaitons stocker les données dans la base de données, ici oui; d'entrer le nom de la propriété qui serait unique, ici le username; et si notre application a besoin de hasher le mot de passe, ici la réponse est oui.
 
-Une fois répondu, le fichier User.php apparaît dans le dossier src puis dans le dossier Entité. Le fichier User.php est déjà pré-rempli avec les informations concernant l'id, l'email et le mot de passe. Le rôle est aussi présent mais nous le modifierons car au début il garanti un role_user à tout le monde, ce que nous ne souhaitons pas dans notre projet. 
+Une fois répondu, le fichier User.php apparaît dans le dossier src puis dans le dossier Entité. Le fichier User.php est déjà pré-rempli avec les informations concernant l'id, le username et le mot de passe. Le rôle est aussi présent mais nous le modifierons car au début il garanti un 'role\_user' à tout le monde, ce que nous ne souhaitons pas dans notre projet. 
 
-À présent, nous modifions notre fichier User.php en ajoutant un 'username' (ajout de la propriété et des méthodes getter et setter) et en modifiant le 'role'.
+À présent, nous modifions notre fichier User.php en ajoutant un 'email' (ajout de la propriété et des méthodes getter et setter) et en modifiant le 'roles'.
 
 Une fois le fichier User.php modifié, nous pouvons enregistrer les modifications dans la base de données avec la commande 'php bin/console make:migration' suivie de la commande 'php bin/console doctrine:migrations:migrate'.
 
@@ -115,9 +115,9 @@ Une fois que l'entité User est créée, il nous faut créer le contrôleur qui 
 
 Il ne faut pas oublier de transmettre ces deux données au template que nous appellerons 'security/login.html.twig'. Enfin, nous pouvons générer le template 'login.html.twig' qui se trouvera dans le dossier 'security', avec le formulaire à l'intérieur de celui-ci.
 
-Ensuite, nous allons générer le contrôleur qui nous permettra de créer et de modifier les utilisateurs avec la commande 'php bin/console make:controller User'. Puis, nous créons trois routes, une pour lister les actions, une pour créer un utilisateur et une pour modifier un utilisateur.
+Ensuite, nous allons générer le contrôleur qui nous permettra de créer et de modifier les utilisateurs avec la commande 'php bin/console make:controller User'. Puis, nous crérons trois routes, une pour lister les actions, une pour créer un utilisateur et une pour modifier un utilisateur.
 
-À présent, nous vérifions que le fichier 'security.yaml', dans le dossier packages qui se trouve être dans le dossier config, soit bien configuré. Nous vérifions que le login_path et le check_path soient bien identiques au nom de la route (ici login). Nous ajoutons aussi le logout avec le bon chemin (path en anglais), le nom du chemin doit être identique au nom de la route du contrôleur correspondant au logout (ici app_logout).
+À présent, nous vérifions que le fichier 'security.yaml', dans le dossier packages qui se trouve être dans le dossier config, soit bien configuré. Nous vérifions que le login\_path et le check\_path soient bien identiques au nom de la route (ici login). Nous ajoutons aussi le logout avec le bon chemin (path en anglais), le nom du chemin doit être identique au nom de la route du contrôleur correspondant au logout (ici logout).
 
 \section{Pour modifier le projet}
 
