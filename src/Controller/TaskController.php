@@ -71,7 +71,7 @@ class TaskController extends AbstractController
 
         if (!$task_db) {
             throw $this->createNotFoundException(
-                'No product found for id '.$id
+                'No task found for id '.$id
             );
         }
 
@@ -79,6 +79,7 @@ class TaskController extends AbstractController
 
         $task->setTitle($task_db->getTitle());
         $task->setContent($task_db->getContent());
+        $task->setAuthor($task_db->getAuthor());        
 
         $form = $this->createForm(TaskType::class, $task);
 
@@ -115,6 +116,12 @@ class TaskController extends AbstractController
     {
         $task_db = $entityManager->getRepository(Task::class)->find($id);
 
+        if (!$task_db) {
+            throw $this->createNotFoundException(
+                'No task found for id '.$id
+            );
+        }
+
         $task_db->toggle(!$task_db->isDone());
 
         $entityManager->persist($task_db);
@@ -136,14 +143,14 @@ class TaskController extends AbstractController
 
         if (!$task_db) {
             throw $this->createNotFoundException(
-                'No product found for id '.$id
+                'No task found for id '.$id
             );
         }
 
         if($this->getUser()){
             $user = $this->getUser();
 
-            if($user->getUsername()==$task_db->getAuthor() || ($task_db->getAuthor()=="anonyme" && $user->getRole()=="ROLE_ADMIN")){
+            if($user->getUsername()==$task_db->getAuthor() || ($task_db->getAuthor()=="anonyme" && $user->getRoles()==["ROLE_ADMIN"])){
                 $entityManager->remove($task_db);
                 $entityManager->flush();
 
