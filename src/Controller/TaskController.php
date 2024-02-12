@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,8 +8,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 //use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\ORM\EntityManagerInterface;
-use AppBundle\Entity\Task;
-use AppBundle\Form\TaskType;
+use App\Entity\Task;
+use App\Form\TaskType;
+use Symfony\Component\Notifier\Notification\Notification;
+use Symfony\Component\Notifier\NotifierInterface;
+use App\Entity\User;
+use App\Form\UserType;
 
 
 class TaskController extends AbstractController
@@ -17,8 +21,6 @@ class TaskController extends AbstractController
     #[Route('/tasks', name: 'task_list')]
     public function listAction(EntityManagerInterface $entityManager, Request $request): Response
     {
-        /*$repository = $entityManager->getRepository(Task::class);
-        $tasks = $repository->findAll();*/
         $tasks = $entityManager->getRepository(Task::class)->findAll();
 
         return $this->render('task/list.html.twig', [
@@ -39,6 +41,12 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $task = $form->getData();
+
+            if($this->getUser()){
+                $user = $this->getUser();
+
+                $task->setAuthor($user->getUsername());
+            }
 
             $entityManager->persist($task);
             $entityManager->flush();
@@ -61,33 +69,37 @@ class TaskController extends AbstractController
 
         if (!$task_db) {
             throw $this->createNotFoundException(
-                'No product found for id '.$id
+                'No task found for id '.$id
             );
         }
 
         $task = new Task();
+
+        $task->setTitle($task_db->getTitle());
+        $task->setContent($task_db->getContent());
+        $task->setAuthor($task_db->getAuthor());        
 
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $task_db = $form->getData();
+            $task = $form->getData();
+
+            $task_db->setTitle($task->getTitle());
+            $task_db->setContent($task->getContent());
 
             $entityManager->persist($task_db);
             $entityManager->flush();
 
             $notifier->send(new Notification('La tâche a bien été modifiée.', ['browser']));
 
-
-
-
             return $this->redirectToRoute('task_list');
         }
 
         return $this->render('task/edit.html.twig', [
             'form' => $form->createView(), 
-            'task' => $task,
+            'task' => $task_db,
         ]);
     }
 
@@ -99,14 +111,18 @@ class TaskController extends AbstractController
     {
         $task_db = $entityManager->getRepository(Task::class)->find($id);
 
+        if (!$task_db) {
+            throw $this->createNotFoundException(
+                'No task found for id '.$id
+            );
+        }
+
         $task_db->toggle(!$task_db->isDone());
 
         $entityManager->persist($task_db);
         $entityManager->flush();
 
         $notifier->send(new Notification('La tâche a bien été marquée comme faite.', ['browser']));
-
-        //$this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
         return $this->redirectToRoute('task_list');
     }
@@ -120,20 +136,21 @@ class TaskController extends AbstractController
 
         if (!$task_db) {
             throw $this->createNotFoundException(
-                'No product found for id '.$id
+                'No task found for id '.$id
             );
         }
 
-        $entityManager->remove($task_db);
-        $entityManager->flush();
+        if($this->getUser()){
+            $user = $this->getUser();
 
-        $notifier->send(new Notification('La tâche a bien été supprimée.', ['browser']));
+            if($user->getUsername()==$task_db->getAuthor() || ($task_db->getAuthor()=="anonyme" && $user->getRoles()==["ROLE_ADMIN"])){
+                $entityManager->remove($task_db);
+                $entityManager->flush();
 
-        /*$em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
+                $notifier->send(new Notification('La tâche a bien été supprimée.', ['browser']));
+            }
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');*/
+        }
 
         return $this->redirectToRoute('task_list');
     }

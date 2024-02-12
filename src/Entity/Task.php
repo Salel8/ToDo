@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Repository\TaskRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
+#[ORM\Table(name: 'task')]
 class Task
 {
     #[ORM\Id]
@@ -14,9 +17,11 @@ class Task
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: "Vous devez saisir un titre.")]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Assert\NotBlank(message: "Vous devez saisir du contenu.")]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
@@ -26,10 +31,15 @@ class Task
     #[ORM\Column]
     private ?bool $isDone = null;
 
+    #[Assert\NotBlank(message: "Vous devez saisir un auteur.")]
+    #[ORM\Column(length: 255)]
+    private ?string $author = null;
+
     public function __construct()
     {
         $this->createdAt = new \Datetime();
         $this->isDone = false;
+        $this->author = "anonyme";
     }
 
     public function getId(): ?int
@@ -78,12 +88,6 @@ class Task
         return $this->isDone;
     }
 
-    /*public function setIsDone(bool $isDone): static
-    {
-        $this->isDone = $isDone;
-
-        return $this;
-    }*/
     public function toggle($flag)
     {
         $this->isDone = $flag;
@@ -91,5 +95,15 @@ class Task
         return $this;
     }
 
-    
+    public function getAuthor(): ?string
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(string $author): static
+    {
+        $this->author = $author;
+
+        return $this;
+    }
 }

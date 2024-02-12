@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\AppBundle\Entity;
+namespace App\Tests\Entity;
 
 use App\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class Task extends KernelTestCase
+class TaskTest extends KernelTestCase
 {
 
     public function getEntity(): Task
@@ -13,27 +13,34 @@ class Task extends KernelTestCase
         return (new Task())
             ->setTitle('Un titre')
             ->setContent('Contenu du test')
+            ->setAuthor('mehal.samir@hotmail.fr');
     }
 
     public function assertHasErrors(Task $code, int $number = 0)
     {
         self::bootKernel();
-        $error = self::$container->get('validator')->validate($code);
+        $container = static::getContainer();
+        $error = $container->get('validator')->validate($code);
         $this->assertCount($number, $error);
     }
 
-    public function testValidEntity()
+    public function testValidEntityTask()
     {
         $this->assertHasErrors($this->getEntity(), 0);
     }
 
-    public function testInvalidBlankTitleEntity()
+    public function testInvalidBlankTitleEntityTask()
     {
         $this->assertHasErrors($this->getEntity()->setTitle(''), 1);
     }
 
-    public function testInvalidBlankContentEntity()
+    public function testInvalidBlankContentEntityTask()
     {
         $this->assertHasErrors($this->getEntity()->setContent(''), 1);
+    }
+
+    public function testInvalidBlankAuthorEntityTask()
+    {
+        $this->assertHasErrors($this->getEntity()->setAuthor(''), 1);
     }
 }

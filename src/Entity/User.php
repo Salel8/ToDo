@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -15,11 +16,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 60, unique: true)]
-    private ?string $email = null;
+    #[Assert\NotBlank(message: "Vous devez saisir un nom d'utilisateur.")]
+    #[ORM\Column(length: 25, unique: true)]
+    private ?string $username = null;
 
     #[ORM\Column]
     private array $roles = [];
+
+
+    private ?string $role = null;
+    
 
     /**
      * @var string The hashed password
@@ -27,22 +33,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 64)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 25, unique: true)]
-    private $username;
+    #[Assert\NotBlank(message: "Vous devez saisir une adresse email.")]
+    #[Assert\Email(message: 'Le format de l\'adresse n\'est pas correcte.',)]
+    #[ORM\Column(length: 60, unique: true)]
+    private ?string $email = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getUsername(): ?string
     {
-        return $this->email;
+        return $this->username;
     }
 
-    public function setEmail(string $email): static
+    public function setUsername(string $username): static
     {
-        $this->email = $email;
+        $this->username = $username;
 
         return $this;
     }
@@ -54,7 +62,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
     }
 
     /**
@@ -64,14 +72,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        //$roles[] = 'ROLE_USER';
 
         return array_unique($roles);
+        //return $this->role;
     }
 
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): static
+    {
+        $this->role = $role;
 
         return $this;
     }
@@ -100,13 +121,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getUsername()
+    public function getEmail(): ?string
     {
-        return $this->username;
+        return $this->email;
     }
 
-    public function setUsername($username)
+    public function setEmail(string $email): static
     {
-        $this->username = $username;
+        $this->email = $email;
+
+        return $this;
     }
 }
