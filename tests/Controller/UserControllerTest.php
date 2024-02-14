@@ -50,10 +50,10 @@ class UserControllerTest extends WebTestCase
     {
         $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('user_create'));
         $form = $crawler->selectButton('Ajouter')->form();
-        $form['user[username]'] = 'Sam';
+        $form['user[username]'] = 'John2';
         $form['user[password][first]'] = 'loup';
         $form['user[password][second]'] = 'loup';
-        $form['user[email]'] = 'sam@hotmail.fr';
+        $form['user[email]'] = 'john2@hotmail.fr';
         $form['user[role]']->select('ROLE_USER');
         $this->client->submit($form);
         

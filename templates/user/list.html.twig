@@ -10,6 +10,11 @@
             Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
         </div>
     {% else %}
+        <div id="message_flash">
+            {% for message in app.flashes('notification') %}
+                {{ message }}
+            {% endfor %}
+        </div>
         <div class="row">
             <table class="table">
                 <thead>
