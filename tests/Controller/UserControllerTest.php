@@ -64,24 +64,6 @@ class UserControllerTest extends WebTestCase
     }
 
 
-    // à revoir
-    /*public function testInvalideCreateUser()
-    {
-        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('user_create'));
-        $form = $crawler->selectButton('Ajouter')->form();
-        //$form['food[entitled]'] = 'Plat de pâtes';
-        $form['user[username]'] = '';
-        $form['user[password][first]'] = 'loup';
-        $form['user[password][second]'] = 'loup';
-        $form['user[email]'] = 'samir@hotmail.fr';
-        $form['user[role]']->select('ROLE_USER');
-        $this->client->submit($form);
-        $this->client->followRedirects();
-
-        
-    }*/
-
-
     public function testEditUser()
     {
         $crawler = $this->client->request('GET', '/users/4/edit');
@@ -120,33 +102,6 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Liste des utilisateurs');
 
     }
-
-    
-
-
-    // à revoir
-    /*public function testInvalideEditUser()
-    {
-        //$client = static::createClient();
-        //$this->testLoginSuccessWithAdminRole();
-        $crawler = $this->client->request('GET', '/users/5/edit');
-
-        $form = $crawler->selectButton('Modifier')->form();
-        //$form['food[entitled]'] = 'Plat de pâtes';
-        $form['user[username]'] = 'Samir';
-        $form['user[password][first]'] = 'dragon';
-        $form['user[password][second]'] = 'dragon';
-        $form['user[email]'] = 'samir@hotmail.fr';
-        $form['user[role]']->select('ROLE_ADMIN');
-        $this->client->submit($form);
-
-
-        $this->client->followRedirects();
-        //$this->assertResponseRedirects('/users/create');
-        //$crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('user_list'));
-        //$this->assertSelectorTextContains('h1', 'Modifier');
-        
-    }*/
 
 
 
