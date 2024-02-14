@@ -1,0 +1,20 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{#{% block title %}404 Erreur{% endblock%}#}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/erreur404.css') }}" rel="stylesheet"/>
+    {{ parent() }}
+{% endblock%}
+
+{% block body %}
+    <div id="erreur">
+        <h1>403 Page non autorisée</h1>
+
+        <p>
+            Vous n'êtes pas autorisé à accéder à cette page. Veuillez vous <a href="{{ path('login') }}">connecter</a>
+            avec le bon compte ou <a href="{{ path('homepage') }}">retournez à la page d'accueil</a>.
+        </p>
+    </div>
+{% endblock %}

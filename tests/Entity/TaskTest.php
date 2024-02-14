@@ -43,4 +43,6 @@ class TaskTest extends KernelTestCase
     {
         $this->assertHasErrors($this->getEntity()->setAuthor(''), 1);
     }
+
+    //zakaria.eddouh@gmail.com
 }

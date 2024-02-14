@@ -1,0 +1,10 @@
+#message_flash{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: greenyellow;
+    width: 50%;
+    margin-bottom: 6%;
+    color: green;
+}

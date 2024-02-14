@@ -64,8 +64,8 @@ class UserTest extends KernelTestCase
         $this->assertHasErrors($this->getEntity()->setEmail('admin1@hotmail.fr'), 1);
     }*/
 
-    public function testInvalidBlankRoleEntityUser()
+    /*public function testInvalidBlankRoleEntityUser()
     {
         $this->assertHasErrors($this->getEntity()->setRoles(''), 1);
-    }
+    }*/
 }

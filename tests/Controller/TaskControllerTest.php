@@ -43,7 +43,7 @@ class TaskControllerTest extends WebTestCase
         $form = $crawler->selectButton('Ajouter')->form();
         $form['task[title]'] = 'Un titre';
         $form['task[content]'] = 'Ceci est du contenu';
-        $form['task[author]'] = 'admin1@hotmail.fr';
+        $form['task[author]'] = 'Admin1';
         $this->client->submit($form);
 
         $crawler = $this->client->followRedirect();
@@ -193,7 +193,7 @@ class TaskControllerTest extends WebTestCase
         $this->urlGenerator = $this->client->getContainer()->get('router.default');
         $this->client->loginUser($this->user);
         
-        $crawler = $this->client->request('GET', '/tasks/17/delete');
+        $crawler = $this->client->request('GET', '/tasks/33/delete');
 
         $crawler = $this->client->followRedirect();
         $this->assertSelectorExists('.slide-image');

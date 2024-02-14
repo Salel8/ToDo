@@ -148,9 +148,11 @@ class TaskController extends AbstractController
                 $entityManager->flush();
 
                 $notifier->send(new Notification('La tâche a bien été supprimée.', ['browser']));
+            } else {
+                $notifier->send(new Notification('Vous n\'êtes pas autorisé à supprimer cette tâche.', ['browser']));
             }
 
-        }
+        } 
 
         return $this->redirectToRoute('task_list');
     }
